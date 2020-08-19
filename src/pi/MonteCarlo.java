@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -38,7 +39,8 @@ public class MonteCarlo {
 	 * the Square. not using the will result in starting the Simulations and
 	 * Calculations with 0 points
 	 * 
-	 * @param i number of points
+	 * @param i
+	 *            number of points
 	 */
 
 	public void init(int i) {
@@ -49,6 +51,8 @@ public class MonteCarlo {
 		doVisual = bool;
 	}
 
+	private Random rnd = new Random();
+
 	public double calculate() {
 
 		if (doVisual) {
@@ -56,9 +60,10 @@ public class MonteCarlo {
 		}
 
 		for (int i = 0; i < points; i++) {
-			double x = Math.random() * 100;
-			double y = Math.random() * 100;
+			double x = rnd.nextDouble() * 100;
+			double y = rnd.nextDouble() * 100;
 			pointsDone++;
+			// double dist = (x*x+y*y);
 			double dist = Math.sqrt(Math.pow(x - (100 / 2), 2) + Math.pow(y - (100 / 2), 2));
 			boolean boolTemp = false;
 			if (dist > 50) {
@@ -68,7 +73,10 @@ public class MonteCarlo {
 				boolTemp = false;
 			}
 			if (doVisual) {
-				update(x, y, boolTemp);
+				if (pointsInCircle != 0 || (pointsDone - pointsInCircle) != 0) {
+					piA = ((double) pointsInCircle / (double) pointsDone) * 4;
+				}
+				update(x * 1, y * 1, boolTemp);
 				try {
 					Thread.sleep(timeout);
 				} catch (InterruptedException e) {
@@ -78,11 +86,7 @@ public class MonteCarlo {
 
 		}
 
-		if (pointsInCircle != 0 || (pointsDone - pointsInCircle) != 0) {
-			piA = ((double) pointsInCircle / (double) pointsDone);
-		}
-
-		return piA;
+		return piA * 4;
 	}
 
 	private boolean doVisual = false;
@@ -99,7 +103,8 @@ public class MonteCarlo {
 	 * 
 	 * Set the Timeout between each point in the visualCalculate
 	 * 
-	 * @param ms Integer time in ms
+	 * @param ms
+	 *            Integer time in ms
 	 */
 	public void setTimeout(int ms) {
 		timeout = ms;
@@ -109,7 +114,8 @@ public class MonteCarlo {
 	 * 
 	 * Set the Scale of the visualCalculate window
 	 * 
-	 * @param Scale Integer default : 5 (size 1000x1000 pixels)
+	 * @param Scale
+	 *            Integer default : 5 (size 1000x1000 pixels)
 	 */
 	public void setScale(int Scale) {
 		scale = Scale;
@@ -120,7 +126,8 @@ public class MonteCarlo {
 	 * Set the number of points between each graph updates in the visualCalculate
 	 * Important each graph point is saved in a array.
 	 * 
-	 * @param pointsPerUpdate Integer number of points between each graph updates
+	 * @param pointsPerUpdate
+	 *            Integer number of points between each graph updates
 	 */
 	public void setPointsPerGraphUpdate(int pointsPerUpdate) {
 		graphDraw = pointsPerUpdate;
@@ -130,7 +137,8 @@ public class MonteCarlo {
 	 * 
 	 * Activate or deactivate the Graph in the visualCalculate window
 	 * 
-	 * @param bool boolean Default : True
+	 * @param bool
+	 *            boolean Default : True
 	 */
 
 	public void doGraph(boolean bool) {
@@ -151,7 +159,7 @@ public class MonteCarlo {
 	private JFrame frame = null;
 
 	public void initV() {
-		frame = new JFrame("Visual MonteCarlo PI Annäherung");
+		frame = new JFrame("Visual MonteCarlo PI Annï¿½herung");
 		frame.setVisible(true);
 		frame.setBounds(0, 0, w * scale, h * scale);
 
@@ -191,14 +199,11 @@ public class MonteCarlo {
 		g.drawString("Points in Circle: " + pointsInCircle, 100 * scale + 10 * scale, 30 * scale);
 		g.drawString("Points outside Circle: " + (pointsDone + 1 - pointsInCircle), 100 * scale + 10 * scale,
 				40 * scale);
-		g.drawString("Current estimate: " + piA, 100 * scale +10  * scale, 50 * scale);
+		g.drawString("Current estimate: " + piA, 100 * scale + 10 * scale, 50 * scale);
 
 		if (doGraph) {
 			graphDrawCounter++;
 			if (graphDrawCounter == graphDraw) {
-				if (pointsInCircle != 0 || (pointsDone - pointsInCircle) != 0) {
-					piA = ((double) pointsInCircle / (double) (pointsDone - pointsInCircle));
-				}
 				list.add(piA);
 				graphDrawCounter = 0;
 
