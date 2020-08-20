@@ -85,8 +85,10 @@ public class MonteCarlo {
 			}
 
 		}
-
-		return piA * 4;
+		if (pointsInCircle != 0 || (pointsDone - pointsInCircle) != 0) {
+			piA = ((double) pointsInCircle / (double) pointsDone) * 4;
+		}
+		return piA;
 	}
 
 	private boolean doVisual = false;
@@ -145,6 +147,11 @@ public class MonteCarlo {
 		doGraph = bool;
 	}
 
+	public void endGraph(int num) {
+		maxGraph = num;
+	}
+
+	private int maxGraph = 0;
 	/**
 	 * 
 	 * Uses a Visual representation of the MonteCarlo method to estimate PI with
@@ -225,6 +232,9 @@ public class MonteCarlo {
 					oldY = (int) (h * scale - (list.get(k) * 10));
 				}
 
+			}
+			if (maxGraph == list.size() && list.size() != 0) {
+				doGraph = false;
 			}
 		}
 

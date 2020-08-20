@@ -4,8 +4,10 @@ public class Main {
  
         MonteCarlo mc = new MonteCarlo();
  
-        mc.init(20000);
-        mc.setTimeout(0);
+        mc.init(200000);
+        mc.setTimeout(1);
+        mc.setPointsPerGraphUpdate(1);
+        mc.endGraph(100);
        mc.doVisual(true);
         double pi = mc.calculate();
          
